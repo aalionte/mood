@@ -26,7 +26,7 @@ public class NRCLexiconService {
 
     public Map<String, NRCLexiconModel> readDictionary() {
         Map<String, NRCLexiconModel> nrcDictionary = new HashMap<>();
-        Resource nrcLexiconFile = new ClassPathResource("/static/NRC-Sentiment-Emotion-Lexicons/NRC-VAD-Lexicon/NRC-VAD-Lexicon.txt");
+        Resource nrcLexiconFile = new ClassPathResource("/static/resources/NRC-Sentiment-Emotion-Lexicons/NRC-VAD-Lexicon/NRC-VAD-Lexicon.txt");
         BufferedReader textReader;
         try {
             textReader = new BufferedReader(new FileReader(nrcLexiconFile.getFile()));
