@@ -37,7 +37,10 @@ public class ProcessLyricsService {
                 if (dictionary.containsKey(word)) {
                     wordModels.add(new WordModel(dictionary.get(word), pos, lemma));
                 } else {
-                    wordModels.add(new WordModel(new NRCLexiconModel(word, 0.0, 0.0, 0.0), pos, lemma));
+                    if (dictionary.containsKey(lemma)) {
+                        wordModels.add(new WordModel(dictionary.get(lemma), pos, lemma));
+                    } else
+                        wordModels.add(new WordModel(new NRCLexiconModel(word, 0.0, 0.0, 0.0), pos, lemma));
                 }
             }
         }
