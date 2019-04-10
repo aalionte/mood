@@ -17,6 +17,7 @@ import java.util.List;
 @Service
 public class DIANA {
 
+    org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(DIANA.class);
     @Autowired
     private WordCharacteristicsService wordCharacteristicsService;
 
@@ -27,8 +28,10 @@ public class DIANA {
         currentCluster.putIfAbsent(0, new Cluster(wordsList));
         Cluster cluster1 = new Cluster(wordsList);
         Cluster cluster2 = new Cluster(new ArrayList<>());
+        logger.info("Entering DIANA");
         int index = 0;
         while (index != -1) {
+            logger.info("DIANA level: " + index);
             split(cluster1, cluster2);
             currentCluster.remove(index);
             currentCluster.put(index, cluster1);
@@ -75,7 +78,7 @@ public class DIANA {
             WordCharacteristics x = averageAcrossCluster(cluster1);
             WordCharacteristics y = averageDistanceWithinCluster(cluster2);
             WordCharacteristics diff = wordCharacteristicsService.difference(x, y);
-            if (diff.compareTo(wordCluster1.getNrcLexiconModel()) > 1) {
+            if (diff.isGreaterThan(wordCluster1.getNrcLexiconModel())) {
                 mostDissm = diff;
                 pivot = wordCluster1;
             }
@@ -85,8 +88,10 @@ public class DIANA {
 
     private void split(Cluster mainList, Cluster splinterCluster) {
         WordModel pivot = splinter(mainList, splinterCluster);
-        while (!pivot.equals("")) {
-            mainList.getWordModelList().remove(pivot);
+        while (!pivot.getNrcLexiconModel().getWord().equals("")) {
+            List<WordModel> newWordList = mainList.getWordModelList();
+            newWordList.remove(pivot);
+            mainList.setWordModelList(newWordList);
             splinterCluster.getWordModelList().add(pivot);
             pivot = splinter(mainList, splinterCluster);
         }
@@ -94,7 +99,6 @@ public class DIANA {
 
     //http://www.mind.disco.unimib.it/public/opere/139.pdf
     //http://www.mind.disco.unimib.it/public/opere/139.pdf
-
 
     private void getWordCharacteristicsAverage(WordCharacteristics wordCharacteristics, int clusterSize) {
         wordCharacteristics.setValence(wordCharacteristics.getValence() / clusterSize);

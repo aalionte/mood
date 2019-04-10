@@ -7,10 +7,10 @@ import java.util.DoubleSummaryStatistics;
 /**
  * Created by Admin on 10-Apr-19.
  */
-public class WordCharacteristics implements Comparable<WordCharacteristics> {
-    protected Double valence;
-    protected Double arousal;
-    protected Double dominance;
+public class WordCharacteristics {
+    protected Double valence;// max = 1.0 min = 0.0
+    protected Double arousal; // max = 0.99 min = 0.046
+    protected Double dominance; // max = 0.991 min = 0.045
 
 
     public WordCharacteristics() {
@@ -49,8 +49,7 @@ public class WordCharacteristics implements Comparable<WordCharacteristics> {
         return dominance;
     }
 
-    @Override
-    public int compareTo(WordCharacteristics o) {
-        return valence.compareTo(o.getValence());
+    public boolean isGreaterThan(NRCLexiconModel nrcLexiconModel) {
+        return arousal > nrcLexiconModel.getArousal() && valence > nrcLexiconModel.getValence();
     }
 }

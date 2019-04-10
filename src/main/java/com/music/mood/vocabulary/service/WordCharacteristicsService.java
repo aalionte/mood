@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class WordCharacteristicsService {
 
-    //todo: rewrite this
     public WordCharacteristics difference(WordCharacteristics wordCharacteristics1, WordCharacteristics wordCharacteristics2) {
         WordCharacteristics wordCharacteristics = new WordCharacteristics();
         wordCharacteristics.setValence(wordCharacteristics1.getValence() - wordCharacteristics2.getValence());

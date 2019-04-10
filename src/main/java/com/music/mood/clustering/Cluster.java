@@ -25,4 +25,8 @@ public class Cluster {
     public List<WordModel> getWordModelList() {
         return wordModelList;
     }
+
+    public void setWordModelList(List<WordModel> wordModelList) {
+        this.wordModelList = wordModelList;
+    }
 }
