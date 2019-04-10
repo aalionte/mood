@@ -1,48 +1,104 @@
 package com.music.mood.clustering;
 
 import com.music.mood.model.WordModel;
+import com.music.mood.vocabulary.model.NRCLexiconModel;
+import com.music.mood.vocabulary.model.WordCharacteristics;
+import com.music.mood.vocabulary.service.WordCharacteristicsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by Admin on 01-Apr-19.
  */
+@Service
 public class DIANA {
+
+    @Autowired
+    private WordCharacteristicsService wordCharacteristicsService;
+
     //http://www.inf.unibz.it/dis/teaching/DWDM/slides2010/lesson9-Clustering.pdf
-    public void getClusters(List<WordModel> wordsList, double entropy, double distance) {
+    //todo: find condition for existing while
+    public void getClusters(List<WordModel> wordsList, double distance) {
         HashMap<Integer, Cluster> currentCluster = new HashMap<>();
         currentCluster.putIfAbsent(0, new Cluster(wordsList));
         Cluster cluster1 = new Cluster(wordsList);
         Cluster cluster2 = new Cluster(new ArrayList<>());
-        double index = 0;
+        int index = 0;
         while (index != -1) {
-
             split(cluster1, cluster2);
+            currentCluster.remove(index);
+            currentCluster.put(index, cluster1);
+            currentCluster.put(index + 1, cluster2);
+            index++;
+            if (index == 20) {
+                index = -1;
+            }
+        }
+    }
+
+    private WordCharacteristics averageDistanceWithinCluster(Cluster cluster) {
+        WordCharacteristics wordCharacteristics = new WordCharacteristics();
+        for (WordModel wordCluster : cluster.getWordModelList()) {
+            wordCharacteristics.setArousal(wordCharacteristics.getArousal() + wordCluster.getNrcLexiconModel().getArousal());
+            wordCharacteristics.setDominance(wordCharacteristics.getDominance() + wordCluster.getNrcLexiconModel().getDominance());
+            wordCharacteristics.setValence(wordCharacteristics.getValence() + wordCluster.getNrcLexiconModel().getValence());
+        }
+        if (cluster.getWordModelList().size() > 1) {
+            int clusterSize = cluster.getWordModelList().size() - 1;
+            getWordCharacteristicsAverage(wordCharacteristics, clusterSize);
+        }
+        return wordCharacteristics;
+    }
+
+    private WordCharacteristics averageAcrossCluster(Cluster cluster) {
+        if (cluster.getWordModelList().size() == 0) {
+            return new WordCharacteristics();
+        }
+        WordCharacteristics wordCharacteristics = new WordCharacteristics();
+        for (WordModel word : cluster.getWordModelList()) {
+            wordCharacteristics.setDominance(wordCharacteristics.getDominance() + word.getNrcLexiconModel().getDominance());
+            wordCharacteristics.setArousal(wordCharacteristics.getArousal() + word.getNrcLexiconModel().getArousal());
+            wordCharacteristics.setValence(wordCharacteristics.getValence() + word.getNrcLexiconModel().getValence());
+        }
+        getWordCharacteristicsAverage(wordCharacteristics, cluster.getWordModelList().size());
+        return wordCharacteristics;
+    }
+
+    private WordModel splinter(Cluster cluster1, Cluster cluster2) {
+        WordCharacteristics mostDissm = new WordCharacteristics(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE);
+        WordModel pivot = new WordModel(new NRCLexiconModel(""), "", "");
+        for (WordModel wordCluster1 : cluster1.getWordModelList()) {
+            WordCharacteristics x = averageAcrossCluster(cluster1);
+            WordCharacteristics y = averageDistanceWithinCluster(cluster2);
+            WordCharacteristics diff = wordCharacteristicsService.difference(x, y);
+            if (diff.compareTo(wordCluster1.getNrcLexiconModel()) > 1) {
+                mostDissm = diff;
+                pivot = wordCluster1;
+            }
+        }
+        return pivot;
+    }
+
+    private void split(Cluster mainList, Cluster splinterCluster) {
+        WordModel pivot = splinter(mainList, splinterCluster);
+        while (!pivot.equals("")) {
+            mainList.getWordModelList().remove(pivot);
+            splinterCluster.getWordModelList().add(pivot);
+            pivot = splinter(mainList, splinterCluster);
         }
     }
 
     //http://www.mind.disco.unimib.it/public/opere/139.pdf
     //http://www.mind.disco.unimib.it/public/opere/139.pdf
-    private void split(Cluster cluster1, Cluster cluster2) {
-        double averageArousal = 0.0;
-        double averageDominance = 0.0;
-        double averageValence = 0.0;
-        List<WordModel> wordsList = cluster1.getWordModelList();
-        for (WordModel wordsListElement : wordsList) {
-            for (WordModel wordListElement2 : wordsList) {
-                if (!wordsListElement.equals(wordListElement2)) {
-                    averageArousal += wordsListElement.getNrcLexiconModel().getArousal();
-                    averageDominance += wordsListElement.getNrcLexiconModel().getDominance();
-                    averageValence += wordsListElement.getNrcLexiconModel().getValence();
-                }
-            }
-            averageArousal = averageArousal / wordsList.size();
-            averageDominance = averageDominance / wordsList.size();
-            averageValence = averageValence / wordsList.size();
-            cluster1.addWordDistance(wordsListElement.getNrcLexiconModel().getWord(), averageValence, averageDominance, averageValence);
-        }
+
+
+    private void getWordCharacteristicsAverage(WordCharacteristics wordCharacteristics, int clusterSize) {
+        wordCharacteristics.setValence(wordCharacteristics.getValence() / clusterSize);
+        wordCharacteristics.setArousal(wordCharacteristics.getArousal() / clusterSize);
+        wordCharacteristics.setDominance(wordCharacteristics.getDominance() / clusterSize);
     }
 }

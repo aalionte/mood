@@ -1,5 +1,6 @@
-package com.music.mood.vocabulary;
+package com.music.mood.vocabulary.model;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -21,6 +22,9 @@ import static java.lang.Double.parseDouble;
 @Service
 public class NRCLexiconService {
 
+    org.slf4j.Logger logger = LoggerFactory.getLogger(NRCLexiconService.class);
+
+
     @Autowired
     private ResourceLoader loader;
 
@@ -36,7 +40,7 @@ public class NRCLexiconService {
                 if (!data[1].toString().endsWith("Valence"))
                     nrcDictionary.put(data[0], new NRCLexiconModel(data[0], parseDouble(data[1]), parseDouble(data[2]), parseDouble(data[3])));
             }
-            return nrcDictionary;
+            logger.info("NRC Dictionary size: " + nrcDictionary.size());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

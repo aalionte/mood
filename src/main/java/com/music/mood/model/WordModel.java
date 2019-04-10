@@ -1,6 +1,6 @@
 package com.music.mood.model;
 
-import com.music.mood.vocabulary.NRCLexiconModel;
+import com.music.mood.vocabulary.model.NRCLexiconModel;
 
 /**
  * Created by Admin on 01-Apr-19.

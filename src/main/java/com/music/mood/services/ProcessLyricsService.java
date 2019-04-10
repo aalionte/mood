@@ -1,14 +1,10 @@
 package com.music.mood.services;
 
 import com.music.mood.model.WordModel;
-import com.music.mood.vocabulary.NRCLexiconModel;
-import edu.stanford.nlp.coref.data.CorefChain;
+import com.music.mood.vocabulary.model.NRCLexiconModel;
+import com.music.mood.vocabulary.model.WordCharacteristics;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
-import edu.stanford.nlp.semgraph.SemanticGraph;
-import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations;
-import edu.stanford.nlp.trees.Tree;
-import edu.stanford.nlp.trees.TreeCoreAnnotations;
 import edu.stanford.nlp.util.CoreMap;
 import org.springframework.stereotype.Service;
 import edu.stanford.nlp.pipeline.Annotation;
@@ -36,12 +32,11 @@ public class ProcessLyricsService {
                 String lemma = token.get(CoreAnnotations.LemmaAnnotation.class);
                 if (dictionary.containsKey(word)) {
                     wordModels.add(new WordModel(dictionary.get(word), pos, lemma));
-                } else {
-                    if (dictionary.containsKey(lemma)) {
-                        wordModels.add(new WordModel(dictionary.get(lemma), pos, lemma));
-                    } else
+                } else if (dictionary.containsKey(lemma)) {
+                    wordModels.add(new WordModel(dictionary.get(lemma), pos, lemma));
+                }/* else
                         wordModels.add(new WordModel(new NRCLexiconModel(word, 0.0, 0.0, 0.0), pos, lemma));
-                }
+                }*/
             }
         }
         return wordModels;

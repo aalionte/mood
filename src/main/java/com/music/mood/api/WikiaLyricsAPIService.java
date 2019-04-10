@@ -21,10 +21,9 @@ public class WikiaLyricsAPIService {
         song = song.replace(" ", "_");
         String response = "";
         try {
-
             Document document = Jsoup.connect(WIKIA_URL + artist + ":" + song).get();
             Elements lyrics = document.getElementsByClass("lyricbox");
-            if (lyrics.hasText()) {
+            if (lyrics != null && lyrics.hasText()) {
                 String lyricsText = "";
                 for (Node el : lyrics.get(0).childNodes()) {
                     if (el instanceof TextNode) {
