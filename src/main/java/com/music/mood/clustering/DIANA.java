@@ -68,7 +68,7 @@ public class DIANA {
             wordCharacteristics.setArousal(wordCharacteristics.getArousal() + (element.getNrcLexiconModel().getArousal() - word.getNrcLexiconModel().getArousal()));
             wordCharacteristics.setValence(wordCharacteristics.getValence() + (element.getNrcLexiconModel().getValence() - word.getNrcLexiconModel().getValence()));
         });
-        getWordCharacteristicsAverage(wordCharacteristics, cluster.getWordModelList().size() - 1);
+        getWordCharacteristicsAverage(wordCharacteristics, cluster.getWordModelList().size());
         return wordCharacteristics;
     }
 
@@ -79,7 +79,7 @@ public class DIANA {
             WordCharacteristics x = averageAcrossCluster(wordCluster1, cluster1);
             WordCharacteristics y = averageDistanceWithinCluster(wordCluster1, cluster2);
             WordCharacteristics diff = wordCharacteristicsService.difference(x, y);
-            if (diff.isGreaterThan(mostDissm)) {
+            if (!diff.isGreaterThan(wordCluster1.getNrcLexiconModel()).isNaN()) {
                 mostDissm = diff;
                 pivot = wordCluster1;
             }

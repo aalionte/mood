@@ -49,7 +49,7 @@ public class WordCharacteristics {
         return dominance;
     }
 
-    public boolean isGreaterThan(WordCharacteristics nrcLexiconModel) {
-        return arousal > nrcLexiconModel.getArousal() && valence > nrcLexiconModel.getValence();
+    public Double isGreaterThan(WordCharacteristics nrcLexiconModel) {
+        return Math.sqrt(Math.pow(arousal - nrcLexiconModel.arousal, 2) + Math.pow(valence - nrcLexiconModel.valence, 2));
     }
 }
