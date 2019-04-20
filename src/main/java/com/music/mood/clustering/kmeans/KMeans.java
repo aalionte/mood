@@ -26,7 +26,7 @@ public class KMeans {
         List<KCluster> clusters = centroids.stream().map(KCluster::new).collect(Collectors.toList());
         return clusters;
     }
-
+//https://www.researchgate.net/publication/235361517_A_Circumplex_Model_of_Affect
     private void sortWordsByX(List<WordModel> wordModelList) {
         Collections.sort(wordModelList, (lhs, rhs) -> lhs.getNrcLexiconModel().getValence() > rhs.getNrcLexiconModel().
                 getValence() ? -1 : (lhs.getNrcLexiconModel().getValence() < rhs.getNrcLexiconModel().getValence()) ? 1 : 0);

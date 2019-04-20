@@ -3,8 +3,6 @@ package com.music.mood.clustering.diana;
 import com.music.mood.model.WordModel;
 import com.music.mood.vocabulary.model.NRCLexiconModel;
 import com.music.mood.vocabulary.model.WordCharacteristics;
-import com.music.mood.vocabulary.service.WordCharacteristicsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,9 +16,9 @@ import java.util.List;
 public class DIANA {
 
     org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(DIANA.class);
-    @Autowired
-    private WordCharacteristicsService wordCharacteristicsService;
 
+
+    //https://media.springernature.com/lw785/springer-static/image/chp%3A10.1007%2F978-3-319-53480-0_4/MediaObjects/439723_1_En_4_Fig2_HTML.gif
     //http://www.inf.unibz.it/dis/teaching/DWDM/slides2010/lesson9-Clustering.pdf
     //todo: find condition for existing while
     public void getClusters(List<WordModel> wordsList, double distance) {

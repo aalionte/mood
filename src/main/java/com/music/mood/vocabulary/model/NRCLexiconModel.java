@@ -17,6 +17,10 @@ public class NRCLexiconModel extends WordCharacteristics {
         this.word = word;
     }
 
+    public NRCLexiconModel() {
+
+    }
+
     public String getWord() {
         return word;
     }
