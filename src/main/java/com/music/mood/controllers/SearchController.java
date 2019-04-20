@@ -1,7 +1,10 @@
 package com.music.mood.controllers;
 
+import com.google.common.collect.ImmutableList;
 import com.music.mood.api.WikiaLyricsAPIService;
-import com.music.mood.clustering.DIANA;
+import com.music.mood.clustering.diana.DIANA;
+import com.music.mood.clustering.kmeans.KMeans;
+import com.music.mood.clustering.kmeans.Point;
 import com.music.mood.model.WordModel;
 import com.music.mood.services.ProcessLyricsService;
 import com.music.mood.stanford.POSAnnotation;
@@ -32,14 +35,17 @@ public class SearchController {
     private ProcessLyricsService processLyricsService;
     @Autowired
     private DIANA diana;
+    @Autowired
+    private KMeans kMeans;
 
     @RequestMapping("/")
     public String home() {
         Map<String, NRCLexiconModel> dictionary = nrcLexiconService.readDictionary();
-        String lyrics = wikiaLyricsAPIService.getLyricsForArtist("Sunlounger", "In and out");
+        String lyrics = wikiaLyricsAPIService.getLyricsForArtist("Pantera", "Walk");
         Annotation document = posAnnotation.getPOS(lyrics);
         List<WordModel> wordModels = processLyricsService.createDataForAnalysis(document, dictionary);
-        diana.getClusters(wordModels, 0);
+        //diana.getClusters(wordModels, 0);
+        kMeans.kmeans(wordModels, ImmutableList.of(new Point(0.75, 0.75), new Point(0.75, 0.25), new Point(0.25, 0.25), new Point(0.25, 0.75)));
         return document.toString();
     }
 

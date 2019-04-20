@@ -1,4 +1,4 @@
-package com.music.mood.clustering;
+package com.music.mood.clustering.diana;
 
 import com.music.mood.model.WordModel;
 import com.music.mood.vocabulary.model.NRCLexiconModel;
@@ -43,44 +43,37 @@ public class DIANA {
         }
     }
 
-    private WordCharacteristics averageDistanceWithinCluster(WordModel currentElement, Cluster cluster) {
-        WordCharacteristics wordCharacteristics = new WordCharacteristics();
-        cluster.getWordModelList().stream()
-                .filter(wordCluster -> !currentElement.equals(wordCluster)).forEach(wordCluster -> {
-            wordCharacteristics.setArousal(wordCharacteristics.getArousal() + (currentElement.getNrcLexiconModel().getArousal() - wordCluster.getNrcLexiconModel().getArousal()));
-            wordCharacteristics.setDominance(wordCharacteristics.getDominance() + (currentElement.getNrcLexiconModel().getDominance() - wordCluster.getNrcLexiconModel().getDominance()));
-            wordCharacteristics.setValence(wordCharacteristics.getValence() + (currentElement.getNrcLexiconModel().getValence() - wordCluster.getNrcLexiconModel().getValence()));
-        });
-        if (cluster.getWordModelList().size() > 1) {
-            int clusterSize = cluster.getWordModelList().size() - 1;
-            getWordCharacteristicsAverage(wordCharacteristics, clusterSize);
+    private Double averageDistanceWithinCluster(WordModel currentElement, Cluster cluster) {
+        Double distance = Double.valueOf(0);
+        for (WordModel wordModel : cluster.getWordModelList()) {
+            distance += currentElement.getNrcLexiconModel().distanceTo(wordModel.getNrcLexiconModel());
         }
-        return wordCharacteristics;
+
+        if (cluster.getWordModelList().size() > 1) {
+            int clusterSize = cluster.getWordModelList().size();
+            return distance / clusterSize;
+        }
+        return distance;
     }
 
-    private WordCharacteristics averageAcrossCluster(WordModel element, Cluster cluster) {
+    private Double averageAcrossCluster(WordModel currentElement, Cluster cluster) {
+        Double distance = Double.valueOf(0);
         if (cluster.getWordModelList().size() == 0) {
-            return new WordCharacteristics();
+            return distance;
         }
-        WordCharacteristics wordCharacteristics = new WordCharacteristics();
-        cluster.getWordModelList().stream().forEach(word -> {
-            wordCharacteristics.setDominance(wordCharacteristics.getDominance() + (element.getNrcLexiconModel().getDominance() - word.getNrcLexiconModel().getDominance()));
-            wordCharacteristics.setArousal(wordCharacteristics.getArousal() + (element.getNrcLexiconModel().getArousal() - word.getNrcLexiconModel().getArousal()));
-            wordCharacteristics.setValence(wordCharacteristics.getValence() + (element.getNrcLexiconModel().getValence() - word.getNrcLexiconModel().getValence()));
-        });
-        getWordCharacteristicsAverage(wordCharacteristics, cluster.getWordModelList().size());
-        return wordCharacteristics;
+        for (WordModel wordModel : cluster.getWordModelList()) {
+            distance += (currentElement.getNrcLexiconModel().distanceTo(wordModel.getNrcLexiconModel()));
+        }
+
+        return distance / cluster.getWordModelList().size();
     }
 
     private WordModel splinter(Cluster cluster1, Cluster cluster2) {
-        WordCharacteristics mostDissm = new WordCharacteristics(Double.parseDouble("-100"), Double.parseDouble("-100"), Double.parseDouble("-100"));
         WordModel pivot = new WordModel(new NRCLexiconModel(""), "", "");
         for (WordModel wordCluster1 : cluster1.getWordModelList()) {
-            WordCharacteristics x = averageAcrossCluster(wordCluster1, cluster1);
-            WordCharacteristics y = averageDistanceWithinCluster(wordCluster1, cluster2);
-            WordCharacteristics diff = wordCharacteristicsService.difference(x, y);
-            if (!diff.isGreaterThan(wordCluster1.getNrcLexiconModel()).isNaN()) {
-                mostDissm = diff;
+            Double x = averageAcrossCluster(wordCluster1, cluster1);
+            Double y = averageDistanceWithinCluster(wordCluster1, cluster2);
+            if (x - y > 0) {
                 pivot = wordCluster1;
             }
         }

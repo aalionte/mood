@@ -1,4 +1,4 @@
-package com.music.mood.clustering;
+package com.music.mood.clustering.diana;
 
 import com.music.mood.model.WordModel;
 
