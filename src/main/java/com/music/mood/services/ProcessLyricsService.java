@@ -3,14 +3,11 @@ package com.music.mood.services;
 import com.google.common.collect.ImmutableList;
 import com.music.mood.model.WordModel;
 import com.music.mood.vocabulary.model.NRCLexiconModel;
-import com.music.mood.vocabulary.model.WordCharacteristics;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
-import edu.stanford.nlp.util.CoreMap;
-import jdk.nashorn.internal.ir.annotations.Immutable;
-import org.springframework.stereotype.Service;
 import edu.stanford.nlp.pipeline.Annotation;
-import sun.net.www.protocol.http.ntlm.NTLMAuthentication;
+import edu.stanford.nlp.util.CoreMap;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;

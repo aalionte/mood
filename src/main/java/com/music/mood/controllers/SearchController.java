@@ -17,7 +17,10 @@ import com.music.mood.vocabulary.model.NRCLexiconService;
 import edu.stanford.nlp.pipeline.Annotation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,4 +68,8 @@ public class SearchController {
         return document.toString();
     }
 
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    public String search(@RequestParam(value = "artist") String artist, @RequestParam(value = "song") String song) {
+        return wikiaLyricsAPIService.getLyricsForArtist(artist, song);
+    }
 }
