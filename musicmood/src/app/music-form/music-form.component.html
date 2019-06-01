@@ -25,6 +25,7 @@
 
   </form>
   <div *ngIf="lyrics !== null">
-    <app-clusters [lyrics]="lyrics"></app-clusters>
+    <div class="lyrics">{{lyrics}}</div>
+    <app-clusters [cluster]="cluster"></app-clusters>
   </div>
 </div>

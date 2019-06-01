@@ -13,8 +13,6 @@ export class LyricsSearchService {
   }
 
   getLyrics(searchDetails) {
-    console.log(this.searchUrl);
-
     return this.http.get(this.searchUrl, {
         headers: {
           'Content-Type': 'application/json; charset=utf-8'

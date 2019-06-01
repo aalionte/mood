@@ -7,7 +7,7 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class ClustersComponent implements OnInit {
   @Input()
-  lyrics: any;
+  cluster: any;
 
   constructor() {
   }

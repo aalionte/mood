@@ -17,7 +17,6 @@ import com.music.mood.vocabulary.model.NRCLexiconModel;
 import com.music.mood.vocabulary.model.NRCLexiconService;
 import edu.stanford.nlp.pipeline.Annotation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -70,5 +69,14 @@ public class SearchController {
     @GetMapping(value = "/search")
     public Map<String, String> search(@RequestParam(value = "artist") String artist, @RequestParam(value = "song") String song) {
         return ImmutableMap.of("lyrics", wikiaLyricsAPIService.getLyricsForArtist(artist, song));
+    }
+
+    @GetMapping(value = "/cluster")
+    public ImmutableMap<String, List<KCluster>> cluster(@RequestParam(value = "lyrics") String lyrics) {
+        Map<String, NRCLexiconModel> dictionary = nrcLexiconService.readDictionary();
+        Annotation document = posAnnotation.getPOS(lyrics);
+        List<WordModel> wordModels = processLyricsService.createDataForAnalysis(document, dictionary);
+        List<KCluster> kClusters = kMeans.kmeans(wordModels, ImmutableList.of(new Point(0.75, 0.75), new Point(0.75, 0.25), new Point(0.25, 0.25), new Point(0.25, 0.75)));
+        return ImmutableMap.of("clusters", kClusters);
     }
 }

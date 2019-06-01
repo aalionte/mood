@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Artist} from '../artist';
 import {LyricsSearchService} from '../lyrics-search.service';
 import {get} from 'lodash';
+import {ClusterService} from '../cluster.service';
 
 @Component({
   selector: 'app-music-form',
@@ -11,17 +12,22 @@ import {get} from 'lodash';
 export class MusicFormComponent implements OnInit {
   artistModel = new Artist('', '');
   lyrics: any;
+  cluster: any;
 
-  constructor(private searchService: LyricsSearchService) {
+  constructor(private searchService: LyricsSearchService,
+              private clusterService: ClusterService) {
   }
 
   ngOnInit() {
   }
 
   onSubmit() {
-    return this.searchService.getLyrics(this.artistModel).subscribe(response => {
+    this.searchService.getLyrics(this.artistModel).subscribe(response => {
       this.lyrics = get(response, 'lyrics');
-      console.log(this.lyrics);
+    });
+    return this.clusterService.getCluster(this.lyrics).subscribe(response => {
+      this.cluster = get(response, 'cluster');
+      console.log(response);
     });
   }
 }
