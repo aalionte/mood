@@ -1,5 +1,5 @@
 <div class="container">
-  <form (ngSubmit)="onSubmit()">
+  <form #artistSearchForm="ngForm" (ngSubmit)="onSubmit()">
 
     <div class="form-group">
       <label for="artist">Artist</label>
@@ -24,4 +24,7 @@
     <button type="button" class="btn btn-default" (click)="onSubmit()">Submit</button>
 
   </form>
+  <div *ngIf="lyrics !== null">
+    <app-clusters [lyrics]="lyrics"></app-clusters>
+  </div>
 </div>

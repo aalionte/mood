@@ -1,6 +1,7 @@
 package com.music.mood.controllers;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.music.mood.api.WikiaLyricsAPIService;
 import com.music.mood.clustering.diana.Cluster;
 import com.music.mood.clustering.diana.DIANA;
@@ -17,10 +18,7 @@ import com.music.mood.vocabulary.model.NRCLexiconService;
 import edu.stanford.nlp.pipeline.Annotation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +28,8 @@ import java.util.Map;
 /**
  * Created by Admin on 01-Apr-19.
  */
-@Controller
+@RestController
+@CrossOrigin(origins = "http://localhost:8080")
 public class SearchController {
     /*    @Autowired
     private MusicoveryAPI musicoveryAPI;*/
@@ -68,8 +67,8 @@ public class SearchController {
         return document.toString();
     }
 
-    @RequestMapping(value = "/search", method = RequestMethod.GET)
-    public String search(@RequestParam(value = "artist") String artist, @RequestParam(value = "song") String song) {
-        return wikiaLyricsAPIService.getLyricsForArtist(artist, song);
+    @GetMapping(value = "/search")
+    public Map<String, String> search(@RequestParam(value = "artist") String artist, @RequestParam(value = "song") String song) {
+        return ImmutableMap.of("lyrics", wikiaLyricsAPIService.getLyricsForArtist(artist, song));
     }
 }
