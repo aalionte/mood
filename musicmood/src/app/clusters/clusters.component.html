@@ -1,3 +1,7 @@
-<p>
-  {{lyrics}}
-</p>
+<div style="display: block" *ngIf="cluster">
+  <canvas baseChart
+          [data]="computeWords()"
+          [labels]="pieChartLabels"
+          [chartType]="pieChartType">
+  </canvas>
+</div>

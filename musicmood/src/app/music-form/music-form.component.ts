@@ -4,6 +4,7 @@ import {LyricsSearchService} from '../lyrics-search.service';
 import {get} from 'lodash';
 import {ClusterService} from '../cluster.service';
 
+
 @Component({
   selector: 'app-music-form',
   templateUrl: './music-form.component.html',
@@ -12,7 +13,6 @@ import {ClusterService} from '../cluster.service';
 export class MusicFormComponent implements OnInit {
   artistModel = new Artist('', '');
   lyrics: any;
-  cluster: any;
 
   constructor(private searchService: LyricsSearchService,
               private clusterService: ClusterService) {
@@ -22,12 +22,10 @@ export class MusicFormComponent implements OnInit {
   }
 
   onSubmit() {
-    this.searchService.getLyrics(this.artistModel).subscribe(response => {
-      this.lyrics = get(response, 'lyrics');
-    });
-    return this.clusterService.getCluster(this.lyrics).subscribe(response => {
-      this.cluster = get(response, 'cluster');
-      console.log(response);
-    });
+    this.searchService.getLyrics(this.artistModel)
+      .subscribe(response => {
+        this.lyrics = get(response, 'lyrics');
+        this.clusterService.setCluster(this.lyrics);
+      });
   }
 }
