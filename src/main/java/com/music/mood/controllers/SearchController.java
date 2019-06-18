@@ -53,7 +53,6 @@ public class SearchController {
         String lyrics = wikiaLyricsAPIService.getLyricsForArtist("Pantera", "Walk");
         Annotation document = posAnnotation.getPOS(lyrics);
         List<WordModel> wordModels = processLyricsService.createDataForAnalysis(document, dictionary);
-        //diana.getClusters(wordModels, 0);
         List<KCluster> kClusters = kMeans.kmeans(wordModels, ImmutableList.of(new Point(0.75, 0.75), new Point(0.75, 0.25), new Point(0.25, 0.25), new Point(0.25, 0.75)));
         List<TFModel> tfModels = new ArrayList<>();
         for (Cluster cluster : kClusters) {
@@ -72,7 +71,7 @@ public class SearchController {
     }
 
     @GetMapping(value = "/cluster")
-    public ImmutableMap<String, List<KCluster>> cluster(@RequestParam(value = "lyrics") String lyrics) {
+    public ImmutableMap<String, List<KCluster>> cluster(@RequestBody String lyrics) {
         Map<String, NRCLexiconModel> dictionary = nrcLexiconService.readDictionary();
         Annotation document = posAnnotation.getPOS(lyrics);
         List<WordModel> wordModels = processLyricsService.createDataForAnalysis(document, dictionary);

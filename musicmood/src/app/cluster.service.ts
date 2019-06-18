@@ -15,17 +15,18 @@ export class ClusterService {
   }
 
   setCluster(request: any) {
-    return this.http.get(this.clusterUrl, {
+    this.clusterList.next();
+    return this.http.post(this.clusterUrl, request, {
       headers: {
         'Content-Type': 'application/json; charset=utf-8'
-      },
-      params: {
-        lyrics: request
       }
     }).subscribe(data => {
-      const tempData = get(data, 'clusters');
-      this.clusterList.next(tempData.map(cl => new Cluster().deserialize(cl)));
-    });
+        const tempData = get(data, 'clusters');
+        this.clusterList.next(tempData.map(cl => new Cluster().deserialize(cl)));
+      },
+      error => {
+        alert(error.message);
+      });
   }
 
   getCluster(): Observable<any> {

@@ -31,6 +31,11 @@
       <div class="form-group float-label-control">
         <button type="button" class="btn btn-dark" (click)="onSubmit()">Submit</button>
       </div>
+
+      <div class="col-sm-4">
+        <div class="error" hidden="!error">Unable to retrieve the lyrics from the API</div>
+      </div>
+
     </form>
   </div>
 

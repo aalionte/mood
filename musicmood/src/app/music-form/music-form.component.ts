@@ -13,6 +13,7 @@ import {ClusterService} from '../cluster.service';
 export class MusicFormComponent implements OnInit {
   artistModel = new Artist('', '');
   lyrics: any;
+  error = false;
 
   constructor(private searchService: LyricsSearchService,
               private clusterService: ClusterService) {
@@ -24,8 +25,12 @@ export class MusicFormComponent implements OnInit {
   onSubmit() {
     this.searchService.getLyrics(this.artistModel)
       .subscribe(response => {
-        this.lyrics = get(response, 'lyrics');
-        this.clusterService.setCluster(this.lyrics);
-      });
+          this.lyrics = get(response, 'lyrics');
+          this.error = false;
+          this.clusterService.setCluster(this.lyrics);
+        },
+        error => {
+          this.error = true;
+        });
   }
 }
