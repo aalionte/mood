@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Cluster} from '../cluster';
 import {ClusterService} from '../cluster.service';
 import {Subscription} from 'rxjs';
+
 
 @Component({
   selector: 'app-clusters',
@@ -14,11 +14,13 @@ export class ClustersComponent implements OnInit {
   public pieChartLabels = ['Happy', 'Calm', 'Sad', 'Angry'];
   public pieChartType = 'pie';
   subscription: Subscription;
+  items: any;
 
   constructor(private clusterService: ClusterService) {
     this.subscription = this.clusterService.getCluster().subscribe(clusterList => {
       if (clusterList) {
         this.cluster = clusterList;
+        this.items = this.clusterService.mapTree(this.cluster);
       } else {
         this.cluster = [];
       }
@@ -33,4 +35,5 @@ export class ClustersComponent implements OnInit {
       return el.wordList.length;
     });
   }
+
 }

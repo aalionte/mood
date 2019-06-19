@@ -1,0 +1,44 @@
+ul {
+  list-style-type: none;
+}
+
+#treeView {
+  margin: 0;
+  padding: 0;
+}
+
+.caret {
+  cursor: pointer;
+  user-select: none;
+}
+
+.caret::before {
+  content: "\25B6";
+  color: black;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.caret-down::before {
+  transform: rotate(90deg);
+}
+
+.active {
+  display: block;
+}
+
+.sad {
+  text-color: pink;
+}
+
+.angry {
+  text-color: red;
+}
+
+.calm {
+  text-color: dodgerblue;
+}
+
+.happy {
+  text-color: yellowgreen;
+}

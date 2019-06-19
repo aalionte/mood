@@ -1,7 +1,6 @@
-export class Artist{
+export class Artist {
 
   constructor(
     public artist: string,
-    public song: string)
-    {}
+    public song: string) {}
 }

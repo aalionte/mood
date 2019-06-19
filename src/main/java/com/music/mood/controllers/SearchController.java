@@ -70,7 +70,7 @@ public class SearchController {
         return ImmutableMap.of("lyrics", wikiaLyricsAPIService.getLyricsForArtist(artist, song));
     }
 
-    @GetMapping(value = "/cluster")
+    @PostMapping(value = "/cluster")
     public ImmutableMap<String, List<KCluster>> cluster(@RequestBody String lyrics) {
         Map<String, NRCLexiconModel> dictionary = nrcLexiconService.readDictionary();
         Annotation document = posAnnotation.getPOS(lyrics);

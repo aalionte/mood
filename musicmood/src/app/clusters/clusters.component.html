@@ -2,6 +2,18 @@
   <canvas baseChart
           [data]="computeWords()"
           [labels]="pieChartLabels"
-          [chartType]="pieChartType">
+          [chartType]="pieChartType"
+          [legend]="true">
   </canvas>
+
+</div>
+<div class="treeview w-20">
+  <ul id="treeView" *ngIf="items">
+    <li *ngFor="let element of items">
+      <span class=" far ic-w mx-1 caret">{{element.name}} - {{element.size}}</span>
+      <ul class="nested">
+        <li class="far ic-w mr-1 {{element.name}}" *ngFor="let child of element.children">{{child.name}}</li>
+      </ul>
+    </li>
+  </ul>
 </div>

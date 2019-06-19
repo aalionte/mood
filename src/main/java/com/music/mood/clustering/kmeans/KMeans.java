@@ -21,7 +21,6 @@ public class KMeans {
         return clusters;
     }
 
-
     private List<KCluster> initCluster(List<WordModel> wordModelList, List<Point> centroids) {
         List<KCluster> clusters = centroids.stream().map(KCluster::new).collect(Collectors.toList());
         return clusters;
