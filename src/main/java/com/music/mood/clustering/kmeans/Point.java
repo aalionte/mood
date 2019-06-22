@@ -8,7 +8,7 @@ public class Point {
     private Double arousal;
     private Double valence;
 
-    public Point(Double arousal, Double valence) {
+    public Point(Double valence, Double arousal) {
         this.arousal = arousal;
         this.valence = valence;
     }

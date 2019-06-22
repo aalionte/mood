@@ -37,7 +37,7 @@ public class NRCLexiconService {
             String line;
             while ((line = textReader.readLine()) != null) {
                 String[] data = line.split("\t");
-                if (!data[1].toString().endsWith("Valence"))
+                if (!data[1].endsWith("Valence"))
                     nrcDictionary.put(data[0], new NRCLexiconModel(data[0], parseDouble(data[1]), parseDouble(data[2]), parseDouble(data[3])));
             }
             logger.info("NRC Dictionary size: " + nrcDictionary.size());
@@ -47,6 +47,29 @@ public class NRCLexiconService {
             e.printStackTrace();
         } finally {
             return nrcDictionary;
+        }
+    }
+
+    public Map<String, NRCCategory> readDictionaryForCategory() {
+        Map<String, NRCCategory> nrcCategoryMap = new HashMap<>();
+        Resource nrcLexiconFile = new ClassPathResource("/static/resources/NRC-Sentiment-Emotion-Lexicons/NRC-Affect-Intensity-Lexicon/NRC-AffectIntensity-Lexicon.txt");
+        try {
+            BufferedReader textReader = new BufferedReader(new FileReader(nrcLexiconFile.getFile()));
+            String line;
+            while ((line = textReader.readLine()) != null) {
+                String[] data = line.split("\t");
+                if (!data[2].endsWith("AffectDimension")) {
+                    nrcCategoryMap.put(data[0], new NRCCategory(data[0], data[2]));
+                }
+            }
+            logger.info("NRC Dictionary size: " + nrcCategoryMap.size());
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            return nrcCategoryMap;
         }
     }
 }

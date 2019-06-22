@@ -30,8 +30,8 @@ public class POSAnnotation {
         StanfordCoreNLP pipeline = new StanfordCoreNLP(
                 PropertiesUtils.asProperties(
                         "annotators", "tokenize,ssplit,pos,lemma,parse",
-                        "ssplit.isOneSentence", "true",
-                       // "parse.model", "edu/stanford/nlp/models/srparser/englishSR.ser.gz"        ,
+                        //"ssplit.isOneSentence", "true",
+                        // "parse.model", "edu/stanford/nlp/models/srparser/englishSR.ser.gz"        ,
                         "tokenize.language", "en"));
 
         Annotation document = new Annotation(text);

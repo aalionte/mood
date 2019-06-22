@@ -2,6 +2,7 @@ package com.music.mood.services;
 
 import com.google.common.collect.ImmutableList;
 import com.music.mood.model.WordModel;
+import com.music.mood.vocabulary.model.NRCCategory;
 import com.music.mood.vocabulary.model.NRCLexiconModel;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
@@ -10,6 +11,7 @@ import edu.stanford.nlp.util.CoreMap;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +54,25 @@ public class ProcessLyricsService {
                     addPositiveWord(dictionary, wordModels, word, pos, lemma);
                 }
 
+            }
+        }
+        return wordModels;
+    }
+
+    public Map<String, NRCCategory> createDataForAnalysisCategory(Annotation document, Map<String, NRCCategory> dictionary) {
+        Map<String, NRCCategory> wordModels = new HashMap<>();
+        List<CoreMap> sentences = document.get(CoreAnnotations.SentencesAnnotation.class);
+
+        for (CoreMap sentence : sentences) {
+
+            for (CoreLabel token : sentence.get(CoreAnnotations.TokensAnnotation.class)) {
+                String word = token.get(CoreAnnotations.TextAnnotation.class);
+                String lemma = token.get(CoreAnnotations.LemmaAnnotation.class);
+                if (dictionary.containsKey(word)) {
+                    wordModels.put(word, dictionary.get(word));
+                } else if (dictionary.containsKey(lemma)) {
+                    wordModels.put(lemma, dictionary.get(lemma));
+                }
             }
         }
         return wordModels;

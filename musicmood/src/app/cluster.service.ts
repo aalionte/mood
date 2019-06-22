@@ -4,8 +4,6 @@ import {Observable, Subject} from 'rxjs';
 import {Cluster} from './cluster';
 import {get} from 'lodash';
 
-import {TreeviewItem} from 'ngx-treeview';
-
 @Injectable({
   providedIn: 'root'
 })
